@@ -12,7 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: echo $GITHUB_REF 
+    - run: |
+        echo ${GITHUB_REF##*/}
+        echo ${{ github.event.action }}
 #     - uses: actions/setup-node@v2
 #       with:
 #         node-version: '14.x'
