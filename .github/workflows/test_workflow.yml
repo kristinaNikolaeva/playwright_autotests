@@ -2,6 +2,8 @@ name: test_workflow
 on:
   pull_request:
     branches: [ main, master ]
+    tags:        
+      - '*'
   workflow_dispatch:
 jobs:
   test:
