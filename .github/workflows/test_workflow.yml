@@ -3,8 +3,6 @@ on:
   pull_request:
     branches: [ main, master ]
   push:
-    tags:        
-      - '*'
   workflow_dispatch:
     inputs:
       full_test_suite:
@@ -27,13 +25,18 @@ jobs:
     - name: set neon_evm_branch
       id: param
       run: |
-        echo "work"
-        if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
-          NEON_EVM_TAG=${{ github.event.inputs.neon_evm_branch }}
-        else
-          NEON_EVM_TAG=${{ github.event.inputs.neon_evm_commit }}
-        fi
-        echo "new_evm_tag=${NEON_EVM_TAG:-'latest'}"
-        echo "new_evm_tag=${NEON_EVM_TAG:-'latest'}" >> $GITHUB_OUTPUT
+          if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
+            neon_evm_tag=`echo "${{ github.event.inputs.neon_evm_branch }}" | sed 's/refs\/tags\///g'` 
+          else
+            neon_evm_tag=${{ github.event.inputs.neon_evm_commit }}
+          fi;
+          echo "neon_evm=${neon_evm_tag:-'latest'}" >> $GITHUB_OUTPUT
+          if [[ "${GITHUB_REF}" =~ "refs/tags/".* ]]; then
+            proxy_tag=`echo "${GITHUB_REF}" | sed 's/refs\/tags\///g'`
+          else
+            proxy_tag=${GITHUB_SHA}
+          fi;
+          echo "proxy=$proxy_tag" >> $GITHUB_OUTPUT
+          echo "test print"
     - run: |
-          echo ${{ steps.param.outputs.new_evm_tag }}
+          echo ${{ steps.param.outputs.proxy }}
