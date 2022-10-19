@@ -39,6 +39,7 @@ jobs:
           proxy_tag = `echo "${GITHUB_REF}" | sed 's/refs\/tags\///g'`
         else
           proxy_tag=${GITHUB_SHA}
+        fi
         echo "proxy_tag=${proxy_tag}" >> $GITHUB_OUTPUT
 
     - run: |
