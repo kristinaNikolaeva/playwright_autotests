@@ -8,11 +8,11 @@ on:
   workflow_dispatch:
     inputs:
       full_test_suite:
-        required: true
+        required: false
       neon_evm_commit:
-        required: true
+        required: false
       neon_evm_branch:
-        required: true
+        required: false
 jobs:
   test:
     timeout-minutes: 60
@@ -26,11 +26,11 @@ jobs:
       id: neon_evm_branch
       run: |
         echo "work"
-        if [[ ""${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
+        if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
           NEON_EVM_TAG=${{ github.event.inputs.neon_evm_branch }}
         else
           NEON_EVM_TAG=${{ github.event.inputs.neon_evm_commit }}
         fi
         echo "::set-output name=value::${NEON_EVM_TAG:-'latest'}"
     - run: |
-          echo ${NEON_EVM_TAG}
+          echo ${{ steps.neon_evm_branch.outputs.value }}
