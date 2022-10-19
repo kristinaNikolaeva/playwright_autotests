@@ -12,7 +12,7 @@ on:
       neon_evm_commit:
         required: false
       neon_evm_branch:
-        required: false
+        required: true
 jobs:
   test:
     timeout-minutes: 60
