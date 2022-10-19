@@ -29,7 +29,7 @@ jobs:
       run: |
         echo "work"
         if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
-          NEON_EVM_TAG=${{ github.event.inputs.neon_evm_branch }}
+          NEON_EVM_TAG=`echo ${{ github.event.inputs.neon_evm_branch }} | sed 's/refs\/tags///g'` 
         else
           NEON_EVM_TAG=${{ github.event.inputs.neon_evm_commit }}
         fi
