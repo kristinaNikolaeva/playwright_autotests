@@ -31,6 +31,6 @@ jobs:
         else
           NEON_EVM_TAG=${{ github.event.inputs.neon_evm_commit }}
         fi
-        echo "::set-output name=value::${NEON_EVM_TAG:-"latest"}"
+        echo "::set-output name=value::${NEON_EVM_TAG:-'latest'}"
     - run: |
           echo ${NEON_EVM_TAG}
