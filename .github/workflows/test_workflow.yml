@@ -29,11 +29,18 @@ jobs:
       run: |
         echo "work"
         if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
-          NEON_EVM_TAG=`echo "${{ github.event.inputs.neon_evm_branch }}" | sed 's/refs\/tags\///g'` 
+          new_evm_tag=`echo "${{ github.event.inputs.neon_evm_branch }}" | sed 's/refs\/tags\///g'` 
         else
-          NEON_EVM_TAG=${{ github.event.inputs.neon_evm_commit }}
+          new_evm_tag=${{ github.event.inputs.neon_evm_commit }}
         fi
-        echo "new_evm_tag=${NEON_EVM_TAG:-'latest'}"
-        echo "new_evm_tag=${NEON_EVM_TAG:-'latest'}" >> $GITHUB_OUTPUT
+        echo "new_evm_tag=${new_evm_tag:-'latest'}" >> $GITHUB_OUTPUT
+        
+        if [[ "${GITHUB_REF}" =~ "refs/tags/".* ]]; then
+          proxy_tag = `echo "${GITHUB_REF}" | sed 's/refs\/tags\///g'`
+        else
+          proxy_tag=${GITHUB_SHA}
+        echo "proxy_tag=${proxy_tag}" >> $GITHUB_OUTPUT
+
     - run: |
           echo ${{ steps.param.outputs.new_evm_tag }}
+          echo ${{ steps.param.outputs.proxy_tag }}
