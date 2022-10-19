@@ -17,6 +17,8 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    outputs:
+      neon_evm_commit: ${{ steps.neon_evm_branch.outputs.neon_evm_commit }}
     steps:
     - uses: actions/checkout@v2
     - run: |
@@ -33,4 +35,4 @@ jobs:
         fi
         echo "new_evm_tag=${NEON_EVM_TAG:-'latest'}" >> $GITHUB_OUTPUT
     - run: |
-          echo ${{ steps.neon_evm_branch.outputs.value }}
+          echo ${{ steps.test.outputs.new_evm_tag }}
