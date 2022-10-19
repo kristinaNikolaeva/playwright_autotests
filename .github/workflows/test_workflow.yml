@@ -18,7 +18,7 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     outputs:
-      neon_evm_commit: ${{ steps.neon_evm_branch.outputs.neon_evm_commit }}
+      new_evm_tag: ${{ steps.neon_evm_branch.outputs.new_evm_tag }}
     steps:
     - uses: actions/checkout@v2
     - run: |
