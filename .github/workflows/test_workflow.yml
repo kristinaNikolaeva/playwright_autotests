@@ -18,14 +18,14 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     outputs:
-      new_evm_tag: ${{ steps.neon_evm_branch.outputs.new_evm_tag }}
+      new_evm_tag: ${{ steps.param.outputs.new_evm_tag }}
     steps:
     - uses: actions/checkout@v2
     - run: |
         echo ${GITHUB_REF##*/}
         echo ${{ github.event.action }}
     - name: set neon_evm_branch
-      id: neon_evm_branch
+      id: param
       run: |
         echo "work"
         if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
@@ -33,6 +33,7 @@ jobs:
         else
           NEON_EVM_TAG=${{ github.event.inputs.neon_evm_commit }}
         fi
+        echo "new_evm_tag=${NEON_EVM_TAG:-'latest'}"
         echo "new_evm_tag=${NEON_EVM_TAG:-'latest'}" >> $GITHUB_OUTPUT
     - run: |
-          echo ${{ steps.test.outputs.new_evm_tag }}
+          echo ${{ steps.param.outputs.new_evm_tag }}
