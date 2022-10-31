@@ -2,6 +2,7 @@ name: test_workflow
 on:
   pull_request:
     branches: [ main, master ]
+    types: [ labeled ]
   push:
     tags:        
       - '*'
@@ -45,3 +46,4 @@ jobs:
     - run: |
           echo ${{ steps.param.outputs.new_evm_tag }}
           echo ${{ steps.param.outputs.proxy_tag }}
+          echo ${{ github.event.label.name }}
