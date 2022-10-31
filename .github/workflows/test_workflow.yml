@@ -46,4 +46,4 @@ jobs:
     - run: |
           echo ${{ steps.param.outputs.new_evm_tag }}
           echo ${{ steps.param.outputs.proxy_tag }}
-          echo ${{ github.event.label.name }}
+          echo ${{ github.event.labels }}
