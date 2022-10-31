@@ -2,7 +2,7 @@ name: test_workflow
 on:
   pull_request:
     branches: [ main, master ]
-    types: [ labeled ]
+    types: [ labeled, opened, reopened, synchronize]
   push:
     tags:        
       - '*'
