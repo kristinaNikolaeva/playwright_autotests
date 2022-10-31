@@ -47,7 +47,8 @@ jobs:
           echo ${{ steps.param.outputs.new_evm_tag }}
           echo ${{ steps.param.outputs.proxy_tag }}
 
-    - run: |
-       x=${{ toJson(github.event.pull_request.labels.*.name) }}
-       echo $x
+    - name: labels test
       if: contains(github.event.pull_request.labels.*.name, 'bug')
+      run: |
+       x='${{ toJson(github.event.pull_request.labels.*.name) }}'
+       echo $x
