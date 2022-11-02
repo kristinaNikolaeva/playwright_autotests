@@ -42,7 +42,7 @@ jobs:
           if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
             echo 'ccc'
             neon_evm_tag=`echo "${{ github.event.inputs.neon_evm_branch }}" | sed 's/refs\/tags\///g'`
-          elif [[ ${{ steps.is_version_neon_evm_branch.outputs.value}} ]]; then
+          elif ${{ steps.is_version_neon_evm_branch.outputs.value }} ; then
             echo 'zzz'
             neon_evm_tag=`echo "${{ github.event.inputs.neon_evm_branch }}" | sed 's/refs\/heads\///g'`
           elif [[ "${{ github.event.inputs.neon_evm_branch }}" == "refs/tags/master" ]]; then
