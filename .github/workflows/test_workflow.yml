@@ -24,6 +24,12 @@ jobs:
     - run: |
         echo ${GITHUB_REF##*/}
         echo ${{ github.event.action }}
+    - name: Check if neon evm branch is version branch
+      id: is_version_neon_evm_branch
+      run: |
+        if [[ "${{ github.event.inputs.neon_evm_branch }}" == "" ]]; then
+            echo "value=true" >> $GITHUB_OUTPUT
+        fi
     - name: set neon_evm_branch
       id: param
       run: |
@@ -31,7 +37,7 @@ jobs:
         echo "${{ github.event.inputs.neon_evm_branch }}"
         if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
           new_evm_tag=`echo "${{ github.event.inputs.neon_evm_branch }}" | sed 's/refs\/tags\///g'` 
-        elif [[ "${{ github.event.inputs.neon_evm_branch }}" == "" ]]; then
+        elif [[ ${{steps.is_version_neon_evm_branch.outputs.value}} ]]; then
           echo "YES"
         else
           new_evm_tag=${{ github.event.inputs.neon_evm_commit }}
