@@ -16,7 +16,7 @@ on:
 env:
   NEON_EVM_TAG: 'latest'
 jobs:
-  test:
+  test1:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     outputs:
@@ -67,7 +67,19 @@ jobs:
           fi;
           echo "proxy_tag=${proxy_tag}"
           echo "proxy=$proxy_tag" >> $GITHUB_OUTPUT
-
-    - run: |
-          echo ${{ steps.param.outputs.new_evm_tag }}
-          echo ${{ steps.param.outputs.proxy_tag }}
+  test2:
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - run: echo "asas"
+  test3:
+    runs-on: ubuntu-latest
+    needs:
+      - test1
+      - test2
+    if: |
+      always() &&
+      needs.test1.result == 'success' &&
+      (needs.test2.result == 'success' || needs.test2.result == 'skipped')
+    steps:
+      - run: echo "asas"
