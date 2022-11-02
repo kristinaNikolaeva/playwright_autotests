@@ -14,7 +14,7 @@ on:
       neon_evm_branch:
         required: true
 env:
-  BRANCH_NEON_EVM_TAG: 'latest'
+  NEON_EVM_TAG: 'latest'
 jobs:
   test:
     timeout-minutes: 60
@@ -30,15 +30,15 @@ jobs:
       id: is_version_neon_evm_branch
       run: |
         if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/heads/"[vt]{1}\d{1,2}\.\d{1,2}\.x ]]; then
-            echo "value=true"
-            echo "value=true" >> $GITHUB_OUTPUT
+            echo "value=false"
+            echo "value=false" >> $GITHUB_OUTPUT
         else
             echo "value=false"
             echo "value=false" >> $GITHUB_OUTPUT
         fi
     - name: Check if neon evm branch is version branch
       run: |
-          echo $BRANCH_NEON_EVM_TAG
+          echo $NEON_EVM_TAG
           if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
             echo 'ccc'
             neon_evm_tag=`echo "${{ github.event.inputs.neon_evm_branch }}" | sed 's/refs\/tags\///g'`
@@ -53,9 +53,9 @@ jobs:
             echo 'bbb'
             neon_evm_tag=${{ github.event.inputs.neon_evm_commit }}
           else
-            echo $BRANCH_NEON_EVM_TAG
+            echo $NEON_EVM_TAG
             echo 'aaa'
-            neon_evm_tag=`echo $BRANCH_NEON_EVM_TAG`
+            neon_evm_tag=`echo $NEON_EVM_TAG`
           fi;
           echo "neon_evm_tag=${neon_evm_tag}"
           echo "neon_evm=${neon_evm_tag}" >> $GITHUB_OUTPUT
