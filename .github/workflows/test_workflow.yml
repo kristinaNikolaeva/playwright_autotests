@@ -29,29 +29,30 @@ jobs:
     - name: Check if neon evm branch is version branch
       id: is_version_neon_evm_branch
       run: |
-        if [[ "${{ github.event.inputs.neon_evm_branch }}" == "" ]]; then
-            echo "value=true" >> $GITHUB_OUTPUT
-        fi
-    - name: set neon_evm_branch
-      id: param
-      run: |
-        echo "${NEON_EVM_TAG}"
-        echo "${{ github.event.inputs.neon_evm_branch }}"
-        if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
-          new_evm_tag=`echo "${{ github.event.inputs.neon_evm_branch }}" | sed 's/refs\/tags\///g'` 
-        elif [[ ${{steps.is_version_neon_evm_branch.outputs.value}} ]]; then
-          echo "YES"
-        else
-          new_evm_tag=${{ github.event.inputs.neon_evm_commit }}
-        fi
-        echo "new_evm_tag=${new_evm_tag:-'latest'}" >> $GITHUB_OUTPUT
-        
-        if [[ "${GITHUB_REF}" =~ "refs/tags/".* ]]; then
-          proxy_tag = `echo "${GITHUB_REF}" | sed 's/refs\/tags\///g'`
-        else
-          proxy_tag=${GITHUB_SHA}
-        fi
-        echo "proxy_tag=${proxy_tag}" >> $GITHUB_OUTPUT
+          echo $NEON_EVM_TAG
+          if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
+            neon_evm_tag=`echo "${{ github.event.inputs.neon_evm_branch }}" | sed 's/refs\/tags\///g'`
+          elif [[ ${{ steps.is_version_neon_evm_branch.outputs.value}} ]]; then
+            neon_evm_tag=`echo "${{ github.event.inputs.neon_evm_branch }}" | sed 's/refs\/heads\///g'`
+          elif [[ "${{ github.event.inputs.neon_evm_branch }}" == "refs/tags/master" ]]; then
+            neon_evm_tag='stable'
+          elif [[ "${{ github.event.inputs.neon_evm_branch }}" == "refs/tags/develop" ]]; then
+            neon_evm_tag='latest'
+          elif [[ "${{ github.event.inputs.neon_evm_branch }}" != "" ]]; then
+            neon_evm_tag=${{ github.event.inputs.neon_evm_commit }}
+          else
+            neon_evm_tag="${NEON_EVM_TAG}"
+          fi;
+          echo "neon_evm_tag=${neon_evm_tag}"
+          echo "neon_evm=${neon_evm_tag}" >> $GITHUB_OUTPUT
+
+          if [[ "${{ github.event.inputs.neon_evm_commit }}" != "" ]]; then
+            proxy_tag="${{ github.sha }}${{ github.event.inputs.neon_evm_commit }}"
+          else
+            proxy_tag="${{ github.sha }}"
+          fi;
+          echo "proxy_tag=${proxy_tag}"
+          echo "proxy=$proxy_tag" >> $GITHUB_OUTPUT
 
     - run: |
           echo ${{ steps.param.outputs.new_evm_tag }}
