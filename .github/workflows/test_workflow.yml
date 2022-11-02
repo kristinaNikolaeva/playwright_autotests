@@ -48,6 +48,7 @@ jobs:
           elif [[ "${{ github.event.inputs.neon_evm_branch }}" == "refs/tags/develop" ]]; then
             neon_evm_tag='latest'
           elif [[ "${{ github.event.inputs.neon_evm_branch }}" != "" ]]; then
+            echo 'bbb'
             neon_evm_tag=${{ github.event.inputs.neon_evm_commit }}
           else
             echo $BRANCH_NEON_EVM_TAG
