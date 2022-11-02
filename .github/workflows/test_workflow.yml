@@ -31,7 +31,7 @@ jobs:
         echo "${{ github.event.inputs.neon_evm_branch }}"
         if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
           new_evm_tag=`echo "${{ github.event.inputs.neon_evm_branch }}" | sed 's/refs\/tags\///g'` 
-        elif [[ !${{ github.event.inputs.neon_evm_branch }} ]]; then
+        elif [[ "${{ github.event.inputs.neon_evm_branch }}" == "" ]]; then
           echo "YES"
         else
           new_evm_tag=${{ github.event.inputs.neon_evm_commit }}
