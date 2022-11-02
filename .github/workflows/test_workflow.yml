@@ -13,6 +13,8 @@ on:
         required: false
       neon_evm_branch:
         required: true
+env:
+  NEON_EVM_TAG: 'latest'
 jobs:
   test:
     timeout-minutes: 60
@@ -33,7 +35,7 @@ jobs:
     - name: set neon_evm_branch
       id: param
       run: |
-        echo "${{ github.base_ref }}"
+        echo "${NEON_EVM_TAG}"
         echo "${{ github.event.inputs.neon_evm_branch }}"
         if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
           new_evm_tag=`echo "${{ github.event.inputs.neon_evm_branch }}" | sed 's/refs\/tags\///g'` 
