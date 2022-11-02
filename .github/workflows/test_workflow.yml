@@ -50,6 +50,8 @@ jobs:
           elif [[ "${{ github.event.inputs.neon_evm_branch }}" != "" ]]; then
             neon_evm_tag=${{ github.event.inputs.neon_evm_commit }}
           else
+            echo $BRANCH_NEON_EVM_TAG
+            echo 'aaa'
             neon_evm_tag=`echo $BRANCH_NEON_EVM_TAG`
           fi;
           echo "neon_evm_tag=${neon_evm_tag}"
