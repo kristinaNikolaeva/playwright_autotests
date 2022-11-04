@@ -32,7 +32,8 @@ jobs:
     - name: Check if neon evm branch is version branch
       id: is_version_neon_evm_branch
       run: |
-        if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/heads/"[vt]{1}\d{1,2}\.\d{1,2}\.x ]]; then
+        a="refs/heads/t0.1.x"
+        if [[ "${a}" =~ "refs//heads//[vt]{1}\d{1,2}\.\d{1,2}\.x" ]]; then
             echo "value=true"
             echo "value=true" >> $GITHUB_OUTPUT
         else
