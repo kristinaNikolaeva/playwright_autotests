@@ -33,7 +33,7 @@ jobs:
       id: is_version_neon_evm_branch
       run: |
         a="t0.1.x"
-        if [[ "${a}" =~ [vt]{1}\d{1,2}\.\d{1,2}\.x ]]; then
+        if [[ "${a}" =~ [vt][0-9]+\.[0-9]+\.x ]]; then
             echo "value=true"
             echo "value=true" >> $GITHUB_OUTPUT
         else
