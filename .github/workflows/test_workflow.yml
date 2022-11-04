@@ -41,7 +41,7 @@ jobs:
             echo "value=true" >> $GITHUB_OUTPUT
         fi
     - name: Check if neon evm branch is version branch
-      if: steps.is_version_neon_evm_branch.outputs.value == "true"
+      if: steps.is_version_neon_evm_branch.outputs.value == 'true'
       run: |
           echo $NEON_EVM_TAG
           if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
