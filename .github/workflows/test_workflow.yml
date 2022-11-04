@@ -1,7 +1,10 @@
 name: test_workflow
 on:
   pull_request:
-    branches: [ main, master ]
+    branches: 
+      - main
+      - master
+      - '[vt][0-9].[0-9]+.[0-9]+*'
   push:
     tags:        
       - '*'
@@ -30,8 +33,8 @@ jobs:
       id: is_version_neon_evm_branch
       run: |
         if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/heads/"[vt]{1}\d{1,2}\.\d{1,2}\.x ]]; then
-            echo "value=false"
-            echo "value=false" >> $GITHUB_OUTPUT
+            echo "value=true"
+            echo "value=true" >> $GITHUB_OUTPUT
         else
             echo "value=false"
             echo "value=false" >> $GITHUB_OUTPUT
