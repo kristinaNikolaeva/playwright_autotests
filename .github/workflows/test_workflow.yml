@@ -1,7 +1,10 @@
 name: test_workflow
 on:
   pull_request:
-    branches: [ main, master ]
+    branches: 
+      - main
+      - master
+      - '[vt][0-9].[0-9]+.[0-9]+*'
   push:
     tags:        
       - '*'
@@ -13,8 +16,10 @@ on:
         required: false
       neon_evm_branch:
         required: true
+env:
+  NEON_EVM_TAG: 'latest'
 jobs:
-  test:
+  test1:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     outputs:
@@ -24,24 +29,61 @@ jobs:
     - run: |
         echo ${GITHUB_REF##*/}
         echo ${{ github.event.action }}
-    - name: set neon_evm_branch
-      id: param
+    - name: Check if neon evm branch is version branch
+      id: is_version_neon_evm_branch
       run: |
-        echo "work"
-        if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
-          new_evm_tag=`echo "${{ github.event.inputs.neon_evm_branch }}" | sed 's/refs\/tags\///g'` 
+        if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/heads/"[vt]{1}\d{1,2}\.\d{1,2}\.x ]]; then
+            echo "value=true"
+            echo "value=true" >> $GITHUB_OUTPUT
         else
-          new_evm_tag=${{ github.event.inputs.neon_evm_commit }}
+            echo "value=false"
+            echo "value=false" >> $GITHUB_OUTPUT
         fi
-        echo "new_evm_tag=${new_evm_tag:-'latest'}" >> $GITHUB_OUTPUT
-        
-        if [[ "${GITHUB_REF}" =~ "refs/tags/".* ]]; then
-          proxy_tag = `echo "${GITHUB_REF}" | sed 's/refs\/tags\///g'`
-        else
-          proxy_tag=${GITHUB_SHA}
-        fi
-        echo "proxy_tag=${proxy_tag}" >> $GITHUB_OUTPUT
+    - name: Check if neon evm branch is version branch
+      if: steps.param.outputs.new_evm_tag
+      run: |
+          echo $NEON_EVM_TAG
+          if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
+            echo 'ccc'
+            neon_evm_tag=`echo "${{ github.event.inputs.neon_evm_branch }}" | sed 's/refs\/tags\///g'`
+          elif ${{ steps.is_version_neon_evm_branch.outputs.value }} ; then
+            echo 'zzz'
+            neon_evm_tag=`echo "${{ github.event.inputs.neon_evm_branch }}" | sed 's/refs\/heads\///g'`
+          elif [[ "${{ github.event.inputs.neon_evm_branch }}" == "refs/tags/master" ]]; then
+            neon_evm_tag='stable'
+          elif [[ "${{ github.event.inputs.neon_evm_branch }}" == "refs/tags/develop" ]]; then
+            neon_evm_tag='latest'
+          elif [[ "${{ github.event.inputs.neon_evm_branch }}" != "" ]]; then
+            echo 'bbb'
+            neon_evm_tag=${{ github.event.inputs.neon_evm_commit }}
+          else
+            echo $NEON_EVM_TAG
+            echo 'aaa'
+            neon_evm_tag=`echo $NEON_EVM_TAG`
+          fi;
+          echo "neon_evm_tag=${neon_evm_tag}"
+          echo "neon_evm=${neon_evm_tag}" >> $GITHUB_OUTPUT
 
-    - run: |
-          echo ${{ steps.param.outputs.new_evm_tag }}
-          echo ${{ steps.param.outputs.proxy_tag }}
+          if [[ "${{ github.event.inputs.neon_evm_commit }}" != "" ]]; then
+            proxy_tag="${{ github.sha }}${{ github.event.inputs.neon_evm_commit }}"
+          else
+            proxy_tag="${{ github.sha }}"
+          fi;
+          echo "proxy_tag=${proxy_tag}"
+          echo "proxy=$proxy_tag" >> $GITHUB_OUTPUT
+  test2:
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - run: echo "asas"
+  test3:
+    runs-on: ubuntu-latest
+    needs:
+      - test1
+      - test2
+    if: |
+      always() &&
+      needs.test1.result == 'success' &&
+      (needs.test2.result == 'success' || needs.test2.result == 'skipped')
+    steps:
+      - run: echo "asas"
