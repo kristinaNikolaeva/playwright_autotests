@@ -37,11 +37,12 @@ jobs:
             echo "value=true"
             echo "value=true" >> $GITHUB_OUTPUT
         else
-            echo "value=true"
-            echo "value=true" >> $GITHUB_OUTPUT
+            echo "value=false"
+            echo "value=false" >> $GITHUB_OUTPUT
         fi
     - name: Check if neon evm branch is version branch
-      if: github.event.inputs.neon_evm_branch == ''
+      if: ${{!startsWith(github.event.inputs.neon_evm_branch , 'refs/tags/')  &&
+            steps.is_version_neon_evm_branch.outputs.value == 'false'}}
       run: |
           echo $NEON_EVM_TAG
           t1=`git rev-parse --short e3d9f798c27bbc9a6ba2f07607bb541f018f51e3`
