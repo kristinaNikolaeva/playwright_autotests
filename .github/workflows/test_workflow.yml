@@ -44,7 +44,7 @@ jobs:
       if: github.event.inputs.neon_evm_branch == ''
       run: |
           echo $NEON_EVM_TAG
-          t1 = `git rev-parse --short e3d9f798c27bbc9a6ba2f07607bb541f018f51e3`
+          t1=`git rev-parse --short e3d9f798c27bbc9a6ba2f07607bb541f018f51e3`
           print $t1
           if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
             echo 'ccc'
