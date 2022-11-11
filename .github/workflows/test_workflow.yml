@@ -32,7 +32,9 @@ jobs:
     - name: Check if neon evm branch is version branch
       id: is_version_neon_evm_branch
       run: |
-        if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/heads/"[vt]{1}\d{1,2}\.\d{1,2}\.x ]]; then
+        echo ${{github.ref}}
+        a="refs/heads/t0.1.x"
+        if [[ "${a}" =~ "refs/heads/"[vt][0-9]+\.[0-9]+\.x ]]; then
             echo "value=true"
             echo "value=true" >> $GITHUB_OUTPUT
         else
@@ -40,9 +42,12 @@ jobs:
             echo "value=false" >> $GITHUB_OUTPUT
         fi
     - name: Check if neon evm branch is version branch
-      if: steps.param.outputs.new_evm_tag
+      if: ${{!startsWith(github.event.inputs.neon_evm_branch , 'refs/tags/')  &&
+            steps.is_version_neon_evm_branch.outputs.value == 'false'}}
       run: |
           echo $NEON_EVM_TAG
+          t1=`git rev-parse --short e3d9f798c27bbc9a6ba2f07607bb541f018f51e3`
+          echo $t1
           if [[ "${{ github.event.inputs.neon_evm_branch }}" =~ "refs/tags/".* ]]; then
             echo 'ccc'
             neon_evm_tag=`echo "${{ github.event.inputs.neon_evm_branch }}" | sed 's/refs\/tags\///g'`
