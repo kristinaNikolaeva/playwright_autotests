@@ -32,6 +32,7 @@ jobs:
     - name: Check if neon evm branch is version branch
       id: is_version_neon_evm_branch
       run: |
+        echo ${{github.ref}}
         a="refs/heads/t0.1.x"
         if [[ "${a}" =~ "refs/heads/"[vt][0-9]+\.[0-9]+\.x ]]; then
             echo "value=true"
