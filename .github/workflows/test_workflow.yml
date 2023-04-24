@@ -29,6 +29,7 @@ jobs:
     - run: |
         echo ${GITHUB_REF##*/}
         echo ${{ github.event.action }}
+        echo "${{ github.ref_name }}"
     - name: Check if neon evm branch is version branch
       id: is_version_neon_evm_branch
       run: |
