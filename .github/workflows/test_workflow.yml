@@ -18,6 +18,7 @@ on:
         required: true
 env:
   NEON_EVM_TAG: 'latest'
+  TEST_ENV: ${{secrets.AAA || ${{env.NEON_EVM_TAG}} }}
 jobs:
   test1:
     timeout-minutes: 60
@@ -27,9 +28,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: |
-        echo ${GITHUB_REF##*/}
-        echo ${{ github.event.action }}
-        echo "${{ github.ref_name }}"
+        echo ${{env.TEST_ENV}}
     - name: Check if neon evm branch is version branch
       id: is_version_neon_evm_branch
       run: |
