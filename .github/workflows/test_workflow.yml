@@ -18,7 +18,7 @@ on:
         required: true
 env:
   NEON_EVM_TAG: 'latest'
-  TEST_ENV: ${{secrets.AAA || env.NEON_EVM_TAG }}
+  TEST_ENV: ${{github.event.inputs.full_test_suite || secrets.AAA }}
 jobs:
   test1:
     timeout-minutes: 60
