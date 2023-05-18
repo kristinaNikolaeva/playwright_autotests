@@ -18,7 +18,7 @@ on:
         required: true
 env:
   NEON_EVM_TAG: 'latest'
-  TEST_ENV: ${{secrets.AAA || ${{env.NEON_EVM_TAG}} }}
+  TEST_ENV: ${{secrets.AAA || env.NEON_EVM_TAG }}
 jobs:
   test1:
     timeout-minutes: 60
