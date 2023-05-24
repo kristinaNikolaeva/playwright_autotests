@@ -1,0 +1,37 @@
+name: dep 
+on:
+  pull_request:
+    branches: 
+      - main
+      - master
+      - '[vt][0-9].[0-9]+.[0-9]+*'
+  push:
+    tags:        
+      - '*'
+  workflow_dispatch:
+jobs:
+  Job1:
+    name: job1
+    runs-on: ubuntu-latest
+    outputs:
+      flag: true
+    steps:
+    - name: write to console 1
+      run: echo "works"
+  Skipped-Job:
+    name: skipped job
+    runs-on: ubuntu-latest
+    if: 1 != 1
+    steps:
+    - name: write to console 1
+      run: echo "I should be skipped"
+
+  Needs-Job:
+    name: needs conditional job
+    needs: [Skipped-Job, Job1]
+    if: always() && needs.Job1.outputs.flag
+    runs-on: ubuntu-latest
+    steps:
+      - name: write to console 2
+        run: echo "Needs-Job completed"
+  
