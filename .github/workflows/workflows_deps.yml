@@ -23,10 +23,16 @@ jobs:
     steps:
     - name: write to console 1
       run: echo "I should be skipped"
-
+  Skipped-Job2:
+    name: skipped job2
+    runs-on: ubuntu-latest
+    if: 1 != 1
+    steps:
+    - name: write to console 1
+      run: echo "I should be skipped"
   Needs-Job:
     name: needs conditional job
-    needs: [Skipped-Job, Job1]
+    needs: [Skipped-Job, Job1, Skipped-Job2]
     if: always() && needs.Job1.outputs.flag == 'aaa'
     runs-on: ubuntu-latest
     steps:
