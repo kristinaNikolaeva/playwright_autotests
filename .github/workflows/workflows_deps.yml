@@ -27,7 +27,7 @@ jobs:
   Needs-Job:
     name: needs conditional job
     needs: [Skipped-Job, Job1]
-    if: always() && needs.Job1.outputs.flag == "aaa"
+    if: always() && needs.Job1.outputs.flag == 'aaa'
     runs-on: ubuntu-latest
     steps:
       - name: write to console 2
