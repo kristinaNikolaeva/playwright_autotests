@@ -33,6 +33,7 @@ jobs:
   report:
     name: report
     runs-on: ubuntu-latest
+    if: always()
     needs: [Skipped-Job, Job1, Skipped-Job2]
     steps:
     - name: write to console 1
