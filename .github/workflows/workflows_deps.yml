@@ -1,0 +1,59 @@
+name: dep 
+on:
+  pull_request:
+    branches: 
+      - main
+      - master
+      - '[vt][0-9].[0-9]+.[0-9]+*'
+  push:
+  workflow_dispatch:
+jobs:
+  prepare:
+    name: job1
+    runs-on: ubuntu-latest
+    outputs:
+      flag: "aaa"
+    steps:
+    - name: write to console 1
+      run: echo "works"
+  Skipped-Job:
+    name: skipped job
+    needs: [prepare]
+    runs-on: ubuntu-latest
+    if: 1 != 1
+    steps:
+    - name: write to console 1
+      run: echo "I should be skipped"
+  Skipped-Job2:
+    name: skipped job2
+    needs: [prepare]
+    runs-on: ubuntu-latest
+    if: 1 != 1
+    steps:
+    - name: write to console 1
+      run: echo "I should be skipped"
+  NOT-Skipped-Job:
+    name: not skipped job
+    needs: [prepare]
+    runs-on: ubuntu-latest
+    if: 1 != 1
+    steps:
+    - name: write to console 1
+      run: echo "I should not be skipped"
+  report:
+    name: report
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [Skipped-Job, prepare, Skipped-Job2, NOT-Skipped-Job]
+    steps:
+    - name: write to console 1
+      run: echo "I should be skipped"
+  Needs-Job:
+    name: needs conditional job
+    needs: [Skipped-Job, prepare, Skipped-Job2, report, NOT-Skipped-Job]
+    if: always() && needs.prepare.outputs.flag == 'aaa'
+    runs-on: ubuntu-latest
+    steps:
+      - name: write to console 2
+        run: echo "Needs-Job completed"
+  
