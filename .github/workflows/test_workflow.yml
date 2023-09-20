@@ -14,7 +14,7 @@ on:
         required: false
       neon_evm_branch:
         required: true
-        default: ${{env.NEON_EVM_TAG}}
+        default: ""
 env:
   NEON_EVM_TAG: 'latest'
   TEST_ENV: ${{github.event.inputs.full_test_suite || secrets.AAA }}
