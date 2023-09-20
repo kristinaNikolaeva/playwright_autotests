@@ -29,7 +29,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: |
-        echo ${{env.TEST_ENV}}
+        echo ${{ github.event.number }}
+        echo ${{ github.event.pull_request.number }}
     - name: Check if neon evm branch is version branch
       id: is_version_neon_evm_branch
       run: |
